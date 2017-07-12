@@ -46,6 +46,7 @@ public class MainActivityTest {
             e.printStackTrace();
         }
 
+
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.next_button), withText("Next"), isDisplayed()));
         appCompatButton.perform(click());
