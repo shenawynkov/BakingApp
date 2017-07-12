@@ -32,12 +32,6 @@ public class MainActivity extends AppCompatActivity implements   BakesAdapter.Cl
     private BakesAdapter adapter;
     private List<Bake> list=new ArrayList<Bake>();
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        new BakingTask().execute();
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements   BakesAdapter.Cl
         mRecyclerView.setAdapter(adapter);
 
 
-
+        new BakingTask().execute();
 
     }
 
@@ -70,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements   BakesAdapter.Cl
 
         @Override
         protected Void doInBackground(Void... voids) {
-
+         list.clear();
               String  url = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
 
 
