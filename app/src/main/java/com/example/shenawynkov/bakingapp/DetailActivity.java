@@ -48,7 +48,7 @@ if(savedInstanceState==null) {
     detailFragments.setArguments(bundle);
 
 
-    fragmentManager.beginTransaction().add(R.id.fragment, detailFragments, detailFragments.TAG).addToBackStack(null).commit();
+    fragmentManager.beginTransaction().add(R.id.fragment, detailFragments, detailFragments.TAG).commit();
 
 
 }

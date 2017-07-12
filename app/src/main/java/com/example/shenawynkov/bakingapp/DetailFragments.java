@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -28,6 +29,9 @@ import java.util.List;
  */
 
 public class DetailFragments extends Fragment implements DetailAdapter.ClickListner{
+    private static final String BUNDLE_RECYCLER_LAYOUT = "classname.recycler.layout";
+    RecyclerView recyclerView;
+
     public final static String TAG= "detail";
     private FragmentActivity myContext;
     Bake bake;
@@ -71,11 +75,11 @@ public  onClickedItem callback;
             }
         });
 
-        RecyclerView recyclerView=v.findViewById(R.id.recyclerSteps);
+        recyclerView =v.findViewById(R.id.recyclerSteps);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
 
-         detailAdapter=new DetailAdapter(list,this);
+         detailAdapter=new DetailAdapter(list,this,getContext());
         recyclerView.setAdapter(detailAdapter);
 
         return v;
@@ -107,6 +111,24 @@ public  onClickedItem callback;
         myContext=(FragmentActivity) activity;
         super.onAttach(activity);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, recyclerView.getLayoutManager().onSaveInstanceState());
+
     }
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if(savedInstanceState != null)
+        {
+            Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+            recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+        }
+    }
+
+}
 
 

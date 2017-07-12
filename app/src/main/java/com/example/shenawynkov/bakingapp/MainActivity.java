@@ -6,11 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.example.shenawynkov.bakingapp.adapters.BakesAdapter;
 import com.example.shenawynkov.bakingapp.models.Bake;
 
@@ -44,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements   BakesAdapter.Cl
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);list.clear();
         setContentView(R.layout.activity_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -52,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements   BakesAdapter.Cl
         adapter=new BakesAdapter(list,this);
         mRecyclerView.setAdapter(adapter);
 
-        AndroidNetworking.initialize(getApplicationContext());
+
 
 
     }
@@ -67,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements   BakesAdapter.Cl
 
     public class BakingTask extends AsyncTask<Void,Void,Void>
     {
+        JSONArray jArray;
         JSONArray array=null ;
 
 
@@ -75,25 +73,7 @@ public class MainActivity extends AppCompatActivity implements   BakesAdapter.Cl
 
               String  url = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
 
-        /*    AndroidNetworking.get("https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json")
-                    .setPriority(Priority.HIGH)
-                    .build()
-                    .getAsJSONArray(new JSONArrayRequestListener() {
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            // do anything with response
-                            try {
-                                parsJason(response);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
 
-                        @Override
-                        public void onError(ANError error) {
-                            // handle error
-                        }
-                    });*/
             try {
                 parsJason(doGetRequest(url));
             } catch (JSONException e) {
@@ -111,12 +91,16 @@ public class MainActivity extends AppCompatActivity implements   BakesAdapter.Cl
                     .url(url)
                     .build();
 
-            Response response = client.newCall(request).execute();
+
+     Response response = client.newCall(request).execute();
+
+
             return response.body().string();
         }
 
+
         void parsJason(String str) throws JSONException {
-            JSONArray jArray;
+
    jArray=new JSONArray(str);
               if(jArray!=null)
             //JSONArray jArray = new JSONArray(str);
@@ -157,12 +141,13 @@ public class MainActivity extends AppCompatActivity implements   BakesAdapter.Cl
 
 
 
-
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if(jArray==null)
+                Toast.makeText(getApplicationContext(),"error in connection ",Toast.LENGTH_LONG).show();
             adapter.notifyDataSetChanged();
            // mRecyclerView.setAdapter(adapter);
         }

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.shenawynkov.bakingapp.models.Bake;
@@ -47,7 +49,6 @@ import static android.media.CamcorderProfile.get;
 
 public class StepFragment extends Fragment {
     public final static String TAG= "step";
-
     private SimpleExoPlayer player;
     private SimpleExoPlayerView playerView;
     private  Bake bake;
@@ -195,6 +196,38 @@ public class StepFragment extends Fragment {
         return v;
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initPlayer();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if ((Util.SDK_INT <= 23 || player == null)) {
+            initPlayer();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
+        }
+    }
     private void hideSystemUI() {
         getActivity().getWindow().getDecorView().setSystemUiVisibility(
 
@@ -237,10 +270,12 @@ public class StepFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-            player.stop();
-            player.release();
 
+    releasePlayer();
         super.onDestroyView();
+    }
+    private void releasePlayer() {     player.stop();
+        player.release();
     }
 
 }

@@ -1,13 +1,16 @@
 package com.example.shenawynkov.bakingapp.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.shenawynkov.bakingapp.R;
 import com.example.shenawynkov.bakingapp.models.Bake;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -18,8 +21,11 @@ import java.util.List;
 public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.viewHolder> {
     private List<Bake.steps> list;
     final  ClickListner mclickListner;
+    Context mContext;
 
-    public DetailAdapter(List<Bake.steps> list, ClickListner mclickListner) {
+
+    public DetailAdapter(List<Bake.steps> list, ClickListner mclickListner,Context context) {
+        mContext=context;
         this.list = list;
         this.mclickListner = mclickListner;
     }
@@ -32,6 +38,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.viewHolder
 
 
     public  class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+         ImageView imageView;
 
 
         public TextView text;
@@ -43,6 +50,8 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.viewHolder
 
 
             text = (TextView) itemView.findViewById(R.id.text);
+            imageView=(ImageView)itemView.findViewById(R.id.image) ;
+
             itemView.setOnClickListener(this);
 
 
@@ -70,6 +79,9 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.viewHolder
     public void onBindViewHolder(viewHolder holder, int position) {
         Bake.steps step=list.get(position);
         holder.text.setText(step.getShortDescription());
+        if(!step.getThumbnailURL().isEmpty())
+        Picasso.with(mContext).load(step.getThumbnailURL()).into(  holder.imageView);
+
 
     }
 

@@ -82,7 +82,7 @@ public class MainActivityTest {
 
         pressBack();
 
-        pressBack();
+
 
         pressBack();
 
